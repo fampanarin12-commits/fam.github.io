@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - โรงอาหารเทคนิคพัทลุง</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #800000;
+            --dark-maroon: #4d0000;
+            --accent-color: #a30000;
+        }
+
+        /* --- ส่วนที่ปรับปรุง: Grid ไว้กลางหน้าจอและใหญ่ขึ้น --- */
+        .bg-grid {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-5deg); /* เอียงเล็กน้อยให้ดูโมเดิร์น */
+            width: 120vw; /* กว้างกว่าหน้าจอเล็กน้อย */
+            height: 120vh;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* แบ่งเป็น 4 คอลัมน์ชัดเจน */
+            grid-auto-rows: 250px; /* เพิ่มความสูงของรูป */
+            gap: 30px;
+            padding: 40px;
+            z-index: -2;
+            overflow: hidden;
+            filter: blur(2px) brightness(0.7); /* เบลอและมืดลงเพื่อให้ฟอร์มเด่น */
+            animation: gridFloat 20s linear infinite; /* เพิ่ม animation การเคลื่อนที่ช้าๆ */
+        }
+
+        @keyframes gridFloat {
+            0% { transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
+            50% { transform: translate(-52%, -48%) rotate(-3deg) scale(1.05); }
+            100% { transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
+        }
+
+        .bg-item {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            border-radius: 40px; /* กรอบมนใหญ่ขึ้น */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            opacity: 0;
+            animation: imageEnter 1.5s ease-out forwards;
+        }
+
+        @keyframes imageEnter {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 0.5; transform: scale(1); }
+        }
+
+        /* --- CSS เดิมที่คงไว้ --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOutDown {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(20px) scale(0.95); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8) rotate(-10deg); }
+            to { opacity: 1; transform: scale(1) rotate(-5deg); }
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--primary-color);
+            background-image: 
+                linear-gradient(135deg, var(--primary-color) 0%, var(--dark-maroon) 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, var(--dark-maroon) 90%);
+            z-index: -1;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.96);
+            padding: 45px 40px;
+            border-radius: 35px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: fadeInUp 0.8s ease-out forwards;
+            transition: all 0.5s;
+            position: relative;
+            z-index: 10;
+        }
+
+        .exit-active {
+            animation: fadeOutDown 0.5s ease-in forwards !important;
+        }
+
+        .logo-placeholder {
+            width: 90px; height: 90px; 
+            background: linear-gradient(145deg, var(--primary-color), var(--dark-maroon));
+            border-radius: 28px; margin: 0 auto 25px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 35px;
+            border: 4px solid #fff; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            animation: zoomIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s backwards;
+        }
+
+        form, h1, h2, .admin-link {
+            animation: fadeInUp 0.6s ease-out 0.5s backwards;
+        }
+
+        h1 { color: var(--primary-color); font-size: 26px; margin-bottom: 5px; font-weight: 700; }
+        h2 { color: #888; font-size: 15px; margin-bottom: 35px; font-weight: 300; letter-spacing: 1px; }
+
+        label { 
+            display: block; text-align: left; font-size: 13px; 
+            margin: 0 0 8px 10px; color: var(--primary-color); 
+            font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        select, input {
+            width: 100%; padding: 16px 20px; margin-bottom: 20px;
+            border: 2px solid #eee; border-radius: 18px; font-size: 16px;
+            box-sizing: border-box; background: #fff; 
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none; border-color: var(--primary-color);
+            background: #fff; transform: translateY(-2px);
+            box-shadow: 0 0 0 4px rgba(128, 0, 0, 0.1);
+        }
+
+        button {
+            width: 100%; padding: 16px; 
+            background: linear-gradient(to bottom, var(--accent-color) 0%, var(--primary-color) 100%);
+            color: white; border: none; border-radius: 18px;
+            font-size: 18px; font-weight: 700; cursor: pointer; 
+            transition: all 0.2s; margin-top: 15px; 
+            box-shadow: 0 6px 0 var(--dark-maroon), 0 12px 20px rgba(128, 0, 0, 0.3);
+            position: relative; top: 0;
+        }
+
+        button:hover { transform: translateY(-2px); box-shadow: 0 8px 0 var(--dark-maroon), 0 15px 25px rgba(128, 0, 0, 0.35); }
+        button:active { top: 4px; box-shadow: 0 2px 0 var(--dark-maroon), 0 5px 10px rgba(0,0,0,0.2); }
+
+        .btn-admin {
+            background: #f5f5f5; color: #666; font-size: 13px; padding: 12px;
+            border: 1px solid #eee; width: 100%; border-radius: 12px; cursor: pointer;
+            box-shadow: 0 4px 0 #ddd; position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid">
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600'); animation-delay: 0.1s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600'); animation-delay: 0.3s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600'); animation-delay: 0.5s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=600'); animation-delay: 0.2s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600'); animation-delay: 0.4s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1493770348161-369560ae357d?w=600'); animation-delay: 0.6s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600'); animation-delay: 0.7s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1567620905732-2d1ec7bb7445?w=600'); animation-delay: 0.8s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=600'); animation-delay: 0.9s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600'); animation-delay: 1.0s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600'); animation-delay: 1.1s;"></div>
+        <div class="bg-item" style="background-image: url('https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600'); animation-delay: 1.2s;"></div>
+    </div>
+
+    <div class="container" id="mainContainer">
+        <div class="logo-placeholder">PT</div>
+        <h1>วิทยาลัยเทคนิคพัทลุง</h1>
+        <h2>ONLINE FOOD ORDERING</h2>
+        
+        <form id="loginForm">
+            <label>👤 ประเภทผู้ใช้งาน</label>
+            <select id="userType" required>
+                <option value="customer">ลูกค้า (นักเรียน/บุคลากร)</option>
+                <option value="shop">ร้านค้าอาหาร</option>
+            </select>
+            
+            <label>✉️ ชื่อผู้ใช้งาน</label>
+            <input type="text" id="username" placeholder="กรอกชื่อผู้ใช้" required>
+
+            <label>🔑 รหัสผ่าน</label>
+            <input type="password" id="password" placeholder="กรอกรหัสผ่าน" required>
+            
+            <button type="submit" id="submitBtn">เข้าสู่ระบบ</button>
+        </form>
+
+        <div class="admin-link">
+            <button type="button" class="btn-admin" onclick="loginAdmin()">⚙️ สำหรับผู้ดูแลระบบ (Admin)</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').onsubmit = function(e) {
+            e.preventDefault();
+            const userType = document.getElementById('userType').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (password.trim() !== "") {
+                sessionStorage.setItem('currentUser', username);
+                sessionStorage.setItem('role', userType);
+                
+                const container = document.getElementById('mainContainer');
+                container.classList.add('exit-active');
+
+                setTimeout(() => {
+                    if(userType === 'customer') {
+                        window.location.href = 'customer1.html';
+                    } else {
+                        window.location.href = 'canteen1.html';
+                    }
+                }, 500);
+            } else {
+                alert("กรุณากรอกรหัสผ่านด้วยครับ");
+            }
+        };
+
+        function loginAdmin() {
+            const pass = prompt("กรุณากรอกรหัสผ่านผู้ดูแลระบบ:");
+            if (pass === "1234") {
+                sessionStorage.setItem('currentUser', 'ผู้ดูแลระบบ');
+                sessionStorage.setItem('role', 'admin');
+                
+                const container = document.getElementById('mainContainer');
+                container.classList.add('exit-active');
+
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 500);
+            } else if (pass !== null) {
+                alert("รหัสผ่านไม่ถูกต้อง!");
+            }
+        }
+    </script>
+</body>
+</html>
